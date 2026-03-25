@@ -96,7 +96,7 @@ class _TaskScreenState extends State<TaskScreen> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         color: isBlocked
-                            ? Colors.grey[300]
+                            ? Colors.grey.shade400
                             : Colors.white,
                         child: Padding(
                           padding: EdgeInsets.all(12),

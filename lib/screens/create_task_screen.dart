@@ -28,14 +28,15 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
 
     titleController =
         TextEditingController(text: provider.draftTitle);
+
     descController =
         TextEditingController(text: provider.draftDescription);
   }
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<TaskProvider>(context);
-    final allTasks = provider.tasks;
+
+    final provider = Provider.of<TaskProvider>(context); // ⭐ listen true
 
     return Scaffold(
       appBar: AppBar(title: Text("Create Task")),
@@ -47,19 +48,22 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
             TextField(
               controller: titleController,
               decoration: InputDecoration(labelText: "Title"),
-              onChanged: (value) =>
-                  provider.saveDraft(value, descController.text),
+              onChanged: (value) {
+                provider.saveDraft(value, descController.text);
+              },
             ),
 
             TextField(
               controller: descController,
-              decoration:
-                  InputDecoration(labelText: "Description"),
-              onChanged: (value) =>
-                  provider.saveDraft(titleController.text, value),
+              decoration: InputDecoration(labelText: "Description"),
+              onChanged: (value) {
+                provider.saveDraft(titleController.text, value);
+              },
             ),
 
-            DropdownButton<TaskStatus>(
+            SizedBox(height: 10),
+
+            DropdownButtonFormField<TaskStatus>(
               value: selectedStatus,
               items: TaskStatus.values.map((status) {
                 return DropdownMenuItem(
@@ -67,24 +71,34 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                   child: Text(status.name),
                 );
               }).toList(),
-              onChanged: (value) =>
-                  setState(() => selectedStatus = value!),
+              onChanged: (value) {
+                setState(() {
+                  selectedStatus = value!;
+                });
+              },
             ),
 
-            DropdownButton<String?>(
-              hint: Text("Blocked By"),
+            SizedBox(height: 10),
+
+            // ✅ FINAL BLOCKED DROPDOWN (WORKS ALWAYS)
+            DropdownButtonFormField<String?>(
               value: selectedBlockedTaskId,
+              decoration: InputDecoration(labelText: "Blocked By"),
               items: [
                 DropdownMenuItem(value: null, child: Text("None")),
-                ...allTasks.map((task) {
+
+                ...provider.tasks.map((task) {
                   return DropdownMenuItem(
                     value: task.id,
                     child: Text(task.title),
                   );
-                }).toList()
+                }).toList(),
               ],
-              onChanged: (value) =>
-                  setState(() => selectedBlockedTaskId = value),
+              onChanged: (value) {
+                setState(() {
+                  selectedBlockedTaskId = value;
+                });
+              },
             ),
 
             SizedBox(height: 20),

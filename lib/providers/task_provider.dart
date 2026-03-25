@@ -7,7 +7,6 @@ class TaskProvider with ChangeNotifier {
 
   List<Task> _tasks = [];
 
-  // Draft
   String draftTitle = '';
   String draftDescription = '';
 
@@ -51,9 +50,12 @@ class TaskProvider with ChangeNotifier {
 
   Future<void> addTask(Task task) async {
     await Future.delayed(Duration(seconds: 2));
+
     _tasks.add(task);
+
     saveTasks();
-    notifyListeners();
+
+    notifyListeners(); // ⭐ THIS is enough
   }
 
   void deleteTask(String id) {
@@ -62,7 +64,6 @@ class TaskProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Draft
   void saveDraft(String title, String desc) {
     draftTitle = title;
     draftDescription = desc;
